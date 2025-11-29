@@ -1,0 +1,22 @@
+runtime: python-3.11
+
+services:
+  - type: web
+    name: confirmit-fastapi
+    env: python
+    plan: free
+    buildCommand: |
+      apt-get update && apt-get install -y tesseract-ocr tesseract-ocr-eng libtesseract-dev
+      pip install --upgrade pip setuptools wheel
+      pip install --no-cache-dir --prefer-binary -r requirements.txt
+    startCommand: |
+      uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONWARNINGS
+        value: "ignore"
+      - key: TZ
+        value: "UTC"
